@@ -47,7 +47,17 @@ for(let i = 0; i < botoesAbas.length; i++)
 botaoSwitch.addEventListener("click", ()=>
 {
     if(botaoSwitch.checked) tocarAudio(null);
-    else pausarAudioSomAmbiente();
+    else
+    {
+        botaoSwitch.checked = false;
+        pausarAudioSomAmbiente();
+    } 
+});
+
+audioSomAmbiente.addEventListener("ended", ()=>
+{
+    console.log("Música ambiente terminou");
+    botaoSwitch.checked = false;
 });
 
 botaoTimer.addEventListener("click", (evento) => 
@@ -175,7 +185,6 @@ function pausarAudioSomAmbiente()
 {
     if(!audioSomAmbiente.paused)
     {
-        botaoSwitch.checked = false;
         audioSomAmbiente.pause();
     }
 
@@ -250,6 +259,7 @@ function ativarTemporizador()
             alterarBotaoTimer();
             definirTemporizador(minutosProximaContagem);
             tocarAudio(0);
+            botaoSwitch.checked = false;
             pausarAudioSomAmbiente();
         }
     }, 1000);
