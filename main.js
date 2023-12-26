@@ -1,6 +1,6 @@
-const temporizadores = document.getElementsByClassName("app__card-timer");
 const botoesAbas = document.getElementsByClassName("app__card-button");
 const botaoTimer = document.getElementById("start-pause");
+const botaoSwitch = document.getElementById("alternar-musica")
 const iconeTimer = document.getElementsByClassName("app__card-primary-butto-icon")[0];
 const span = document.querySelector("#start-pause>span");
 const raiz = document.querySelector("html");
@@ -43,6 +43,13 @@ for(let i = 0; i < botoesAbas.length; i++)
         }                      
     }
 }
+
+botaoSwitch.addEventListener("click", ()=>
+{
+    if(botaoSwitch.checked) tocarAudio(null);
+    else pausarAudioSomAmbiente();
+});
+
 botaoTimer.addEventListener("click", (evento) => 
 {
     isTimerEnable = (isTimerEnable === false ? true : false);
@@ -164,10 +171,13 @@ function tocarAudioSomAmbiente()
     audioSomAmbiente.play();
 }
 
-function pausarAudio()
+function pausarAudioSomAmbiente()
 {
-    const audioSomAmbiente = document.getElementById("audio-som-ambiente");
-    audioSomAmbiente.pause();
+    if(!audioSomAmbiente.paused)
+    {
+        botaoSwitch.checked = false;
+        audioSomAmbiente.pause();
+    }
 
 }
 
@@ -198,7 +208,6 @@ function definirTemporizador(numMinutos) {
     // Define o tempo desejado em segundos (exemplo: 5 minutos)
     minutosProximaContagem = numMinutos;
     let tempoTotalSegundos = numMinutos * 60;
-
     tempoRestante = tempoTotalSegundos;
     atualizarTemporizador();
 }
@@ -212,17 +221,9 @@ function atualizarTemporizador() {
     segundos = segundos < 10 ? "0" + segundos : segundos;
 
     // Atualiza o conteúdo do elemento com id 'temporizador'
-    for(let i = 0; i < temporizadores.length; i++)
-    {
-        if(temporizadores[i].dataset.contexto === raiz.dataset.contexto)
-        {
-            if(temporizadores[i].classList.contains("esconder"))
-            {
-                temporizadores[i].remove("esconder");
-            }
-            temporizadores[i].innerText = minutos + ":" + segundos;
-        }
-    }
+    
+    document.getElementById("timer").textContent = minutos + ":" + segundos;
+  
 }
 
 function ativarTemporizador()
@@ -249,6 +250,7 @@ function ativarTemporizador()
             alterarBotaoTimer();
             definirTemporizador(minutosProximaContagem);
             tocarAudio(0);
+            pausarAudioSomAmbiente();
         }
     }, 1000);
 }
