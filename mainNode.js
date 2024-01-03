@@ -18,4 +18,4 @@ data.setHours(10);  // Define as horas
 data.setMinutes(30); // Define os minutos
 data.setSeconds(0); // Define os segundos
 
-console.log(data.getMonth().toLocaleString());
+console.log(data.toLocaleTimeString("pt-BR",{minute: "2-digit", second: "2-digit"}));
