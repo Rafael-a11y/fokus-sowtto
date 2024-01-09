@@ -6,16 +6,5 @@ const dia = currentDate.getDate(); // Acessa o dia
 const horas = currentDate.getHours(); // Acessa as horas 
 const minutos = currentDate.getMinutes(); // Acessa os minutos
 const segundos = currentDate.getSeconds(); // Acessa os segundos
-const milissegundos = currentDate.getMilliseconds();  // Acessa os milissegundos 
-console.clear();
+const array [];
 
-const data = new Date();
-
-data.setFullYear(2024);  // Define o ano
-data.setMonth(10); // Define o mês
-data.setDate(25); // Define o dia
-data.setHours(10);  // Define as horas
-data.setMinutes(30); // Define os minutos
-data.setSeconds(0); // Define os segundos
-
-console.log(data.toLocaleTimeString("pt-BR",{minute: "2-digit", second: "2-digit"}));
