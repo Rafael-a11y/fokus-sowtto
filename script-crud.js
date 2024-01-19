@@ -4,7 +4,25 @@ const textarea = document.querySelector(".app__form-textarea");
 const tarefas = JSON.parse(localStorage.getItem("token")) || [];
 const array = [{nome: "rafael"}];
 const ulTarefas = document.querySelector(".app__section-task-list");
+const cancelarBt = document.querySelector(".app__form-footer__button--cancel");
+const limparFormulario = () =>
+{
+    textarea.value = "";
+    formularioAdicionarTarefa.classList.add("hidden");
+};
+// const vetor = [];
+// const pessoa = {nome: "Rafel", idade: 24};
+// const pessoa2 = {nome:"israel", idade: 24}
+// const pessoa3 = {nome:"Tirza", idade: 28}
+// vetor.push(pessoa, pessoa2, pessoa3);
+// localStorage.setItem("id", JSON.stringify(vetor));
+// const novo = localStorage.getItem("id");
+// console.log(novo);
 
+function atualizarTarefas()
+{
+    localStorage.setItem("token", JSON.stringify(tarefas));
+}
 
 function criarElementoTarefa(tarefa)
 {
@@ -22,7 +40,15 @@ function criarElementoTarefa(tarefa)
     paragrafo.classList.add("app__section-task-list-item-description");
     paragrafo.textContent = tarefa.descricao;
     const botao = document.createElement("button");
-    botao.classList.add("app_button-edit")
+    botao.classList.add("app_button-edit");
+    botao.onclick = () =>
+    {
+        debugger;
+        const novaDescricao = prompt("Qual a nova tarefa?", paragrafo.textContent) || paragrafo.textContent;
+        paragrafo.textContent = novaDescricao;
+        tarefa.descricao = novaDescricao;
+        atualizarTarefas();
+    } ;
     const imagemBotao = document.createElement("img");
     imagemBotao.setAttribute("src", "/imagens/edit.png");
     botao.append(imagemBotao);
@@ -35,6 +61,8 @@ botaoAdicionarTarefa.addEventListener("click", () =>
     formularioAdicionarTarefa.classList.toggle("hidden");
 });
 
+cancelarBt.addEventListener("click", limparFormulario);
+
 formularioAdicionarTarefa.addEventListener("submit", (evento) =>
 {
     evento.preventDefault();
@@ -45,7 +73,7 @@ formularioAdicionarTarefa.addEventListener("submit", (evento) =>
     tarefas.push(tarefa);
     const elementoTarefa = criarElementoTarefa(tarefa);
     ulTarefas.prepend(elementoTarefa);
-    localStorage.setItem("token", JSON.stringify(tarefas));
+    atualizarTarefas();
     textarea.value = "";
     formularioAdicionarTarefa.classList.add("hidden");
 });
@@ -54,3 +82,5 @@ tarefas.forEach(tarefa => {
     const elementoTarefa = criarElementoTarefa(tarefa);
     ulTarefas.prepend(elementoTarefa);
 });
+
+
