@@ -19,7 +19,7 @@ const audioStart = new Audio("./sons/play.wav");
 const audioPause = new Audio("./sons/pause.mp3");
 const audioAlarme = new Audio("./sons/beep.mp3");
 musicaAmbiente.loop = true;
-let tempoDecorridoEmSegundos = 1500;
+let tempoDecorridoEmSegundos = 10;
 let intervaloId = null;
 
 const contagemRegressiva = () =>
@@ -27,8 +27,15 @@ const contagemRegressiva = () =>
     if(tempoDecorridoEmSegundos <= 0)
     {
         // clearInterval(intervaloId);
-        zerar();
+        const focoAtivo = html.getAttribute("data-contexto") === "foco";
+        if(focoAtivo)
+        {
+            //Cria evento do tipo FocoFinalisado e logo em seguida esse evento é despachado para os outros arquivos .js
+            const evento = new CustomEvent("FocoFinalisado");
+            document.dispatchEvent(evento);       
+        }
         audioAlarme.play();
+        zerar();
         alert("temporizador finalizado");
         return;
     }
