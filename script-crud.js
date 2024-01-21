@@ -1,11 +1,13 @@
 const botaoAdicionarTarefa = document.querySelector(".app__button--add-task");
 const formularioAdicionarTarefa = document.querySelector(".app__form-add-task");
 const textarea = document.querySelector(".app__form-textarea");
-const tarefas = JSON.parse(localStorage.getItem("token")) || [];
 const array = [{nome: "rafael"}];
 const ulTarefas = document.querySelector(".app__section-task-list");
 const paragrafoDescricaoTarefa = document.querySelector(".app__section-active-task-description");
 const cancelarBt = document.querySelector(".app__form-footer__button--cancel");
+const btnRemoverConcluidas = document.querySelector("#btn-remover-concluidas");
+const btnRemoverTodas = document.querySelector("#btn-remover-todas");
+let tarefas = JSON.parse(localStorage.getItem("token")) || [];
 let tarefaSelecionada = null;
 let liTarefaSelecionada = null;
 const limparFormulario = () =>
@@ -56,32 +58,33 @@ function criarElementoTarefa(tarefa)
     imagemBotao.setAttribute("src", "/imagens/edit.png");
     botao.append(imagemBotao);
     li.append(svg, paragrafo, botao);
-    li.onclick = () =>
+    if(tarefa.completa)
     {
-        document.querySelectorAll(".app__section-task-list-item-active")
-            .forEach(item =>
-                {
-                    item.classList.remove("app__section-task-list-item-active");
-                });
-        if(tarefaSelecionada === tarefa)
+        li.classList.add("app__section-task-list-item-complete");
+        botao.setAttribute("disabled", "true");
+    }
+    else
+    {
+        li.onclick = () =>
         {
-            paragrafoDescricaoTarefa.textContent = "";
-            tarefaSelecionada = null;
-            liTarefaSelecionada = null;
-            return;
+            document.querySelectorAll(".app__section-task-list-item-active")
+                .forEach(item =>
+                    {
+                        item.classList.remove("app__section-task-list-item-active");
+                    });
+            if(tarefaSelecionada === tarefa)
+            {
+                paragrafoDescricaoTarefa.textContent = "";
+                tarefaSelecionada = null;
+                liTarefaSelecionada = null;
+                return;
+            }
+            tarefaSelecionada = tarefa;
+            liTarefaSelecionada = li;
+            paragrafoDescricaoTarefa.textContent = tarefa.descricao;
+            li.classList.add("app__section-task-list-item-active");
         }
-        tarefaSelecionada = tarefa;
-        liTarefaSelecionada = li;
-        // const ulItens = Array.from(ulTarefas.children);
-        // OU
-        // const ulItens = [...ulTarefas.children];
-        // ulItens.forEach(item => 
-        //     {
-        //         item.classList.remove("app__section-task-list-item-active");
-        //     });
-        //     OU
-        paragrafoDescricaoTarefa.textContent = tarefa.descricao;
-        li.classList.add("app__section-task-list-item-active");
+
     }
     return li;
 }
@@ -120,9 +123,23 @@ document.addEventListener("FocoFinalisado", ()=>
         liTarefaSelecionada.classList.remove("app__section-task-list-item-active");
         liTarefaSelecionada.classList.add("app__section-task-list-item-complete");
         liTarefaSelecionada.querySelector("button").setAttribute("disabled", "true");
-        // [...liTarefaSelecionada.children].forEach(item =>
-        //     {
-        //         if(item.classList.contains("app_button-edit")) item.setAttribute("disabled","true");
-        //     });
+        tarefaSelecionada.completa = true;
+        atualizarTarefas();
     }
 });
+
+const removerTarefas = (somenteCompletas) =>
+{
+    const seletor = somenteCompletas ? ".app__section-task-list-item-complete" : ".app__section-task-list-item";
+    document.querySelectorAll(seletor).forEach(elemento => 
+        {
+            elemento.remove();
+        });
+
+    tarefas = somenteCompletas ? tarefas.filter(tarefa => !tarefa.completa) : [];
+    atualizarTarefas();
+}
+
+btnRemoverConcluidas.addEventListener("click", () => {removerTarefas(true)});
+
+btnRemoverTodas.addEventListener("click", () => {removerTarefas(false)});

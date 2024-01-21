@@ -19,7 +19,7 @@ const audioStart = new Audio("./sons/play.wav");
 const audioPause = new Audio("./sons/pause.mp3");
 const audioAlarme = new Audio("./sons/beep.mp3");
 musicaAmbiente.loop = true;
-let tempoDecorridoEmSegundos = 10;
+let tempoDecorridoEmSegundos = 5;
 let intervaloId = null;
 
 const contagemRegressiva = () =>
